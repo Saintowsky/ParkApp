@@ -1,39 +1,61 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import React from "react";
+import { Stack, useRouter, useSegments } from "expo-router";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+export default function Layout() {
+  const segments: string[] = useSegments();
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+  const router = useRouter();
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
+  const isAuthScreen = segments.includes("login") || segments.includes("register");
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <View style={styles.container}>
+      <Stack screenOptions={{ headerShown: false }} />
+      {!isAuthScreen && (
+        <View style={styles.navbar}>
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => router.push("/profile")}
+          >
+            <MaterialIcons name="person" size={24} color="white" />
+            <Text style={styles.navText}>Profile</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => router.push("/map")}
+          >
+            <MaterialIcons name="map" size={24} color="white" />
+            <Text style={styles.navText}>Map</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  navbar: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#1e90ff",
+    paddingVertical: 10,
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+  },
+  navItem: {
+    alignItems: "center",
+  },
+  navText: {
+    color: "white",
+    fontSize: 12,
+    marginTop: 4,
+  },
+});
