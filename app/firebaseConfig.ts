@@ -4,12 +4,12 @@ import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "",
-  authDomain: "projekt-zesp.firebaseapp.com",
-  projectId: "projekt-zesp",
-  storageBucket: "projekt-zesp.firebasestorage.app",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
   messagingSenderId: "",
   appId: "",
-  measurementId: "G-RRHN984TEE",
+  measurementId: "",
 };
 
 const app = initializeApp(firebaseConfig);
